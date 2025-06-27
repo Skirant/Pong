@@ -1,30 +1,29 @@
-using UnityEngine;
+п»їusing UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Настройки")]
-    public float maxRotationSpeed = 200f; // максимальная скорость вращения
-    public float sensitivity = 0.5f;      // чувствительность вращения
+    [Header("РќР°СЃС‚СЂРѕР№РєРё")]
+    public float maxRotationSpeed = 200f; // РјР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РІСЂР°С‰РµРЅРёСЏ
+    public float sensitivity = 0.5f;      // С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅРѕСЃС‚СЊ РІСЂР°С‰РµРЅРёСЏ
 
     private bool isDragging = false;
     private float lastMouseX;
 
     void Update()
     {
-        // Нажали — начали слежение
+        if (!GameManager.gameStarted) return; // в›” Р—Р°РїСЂРµС‚ СѓРїСЂР°РІР»РµРЅРёСЏ РґРѕ СЃС‚Р°СЂС‚Р° РёРіСЂС‹
+
         if (Input.GetMouseButtonDown(0))
         {
             lastMouseX = Input.mousePosition.x;
             isDragging = true;
         }
 
-        // Отпустили — остановили
         if (Input.GetMouseButtonUp(0))
         {
             isDragging = false;
         }
 
-        // Управляем во время зажатия
         if (isDragging)
         {
             float currentMouseX = Input.mousePosition.x;

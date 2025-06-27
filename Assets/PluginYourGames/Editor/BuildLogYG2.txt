@@ -1,0 +1,3 @@
+Build path: Z:/Unity New Test/Pong
+Build number: 11
+PluginYG version: 2.0032

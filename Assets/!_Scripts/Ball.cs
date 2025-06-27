@@ -1,8 +1,9 @@
 using System.Collections;
+using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
-using System.IO;
+using YG;
 
 public class Ball : MonoBehaviour
 {
@@ -98,6 +99,8 @@ public class Ball : MonoBehaviour
             rb.linearVelocity = blendedDirection * speed;
 
             transform.position = new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
+
+            FindAnyObjectByType<AudioManager>().Play("Bonk");
         }
     }
 
@@ -105,7 +108,19 @@ public class Ball : MonoBehaviour
     {
         if (other.CompareTag("BoundaryZone"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            StartCoroutine(HandleGameOver());
         }
+    }
+
+    private IEnumerator HandleGameOver()
+    {
+        FindAnyObjectByType<AudioManager>().Play("GameOver");
+
+        // Подождать, пока звук проигрывается
+        yield return new WaitForSeconds(0.5f); // Подстрой под длину звука
+
+
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

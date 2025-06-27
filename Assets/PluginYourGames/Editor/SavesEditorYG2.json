@@ -1,0 +1,12 @@
+{
+    "maxScore": 85,
+    "intExample": 5,
+    "strExample": "Hello!",
+    "boolExample": [
+        false,
+        false,
+        false,
+        false
+    ],
+    "idSave": 80
+}
