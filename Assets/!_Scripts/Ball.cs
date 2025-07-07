@@ -10,6 +10,8 @@ public class Ball : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer ballSpriteRenderer;
 
+    [SerializeField] private GameManager gameManager;
+
     [Header("Скорость мяча")]
     [SerializeField] private float baseSpeed = 1.1f;
     [SerializeField] private float speedMultiplier = 0.1f;
@@ -116,10 +118,11 @@ public class Ball : MonoBehaviour
     {
         FindAnyObjectByType<AudioManager>().Play("GameOver");
 
+
         // Подождать, пока звук проигрывается
         yield return new WaitForSeconds(0.5f); // Подстрой под длину звука
 
-
+        gameManager.UpdateLeaderBoard();
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

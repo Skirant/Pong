@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,12 @@ public class GameManager : MonoBehaviour
     public GameObject LBExample;
     public LeaderboardYG leaderboardYG;
     public GameObject LiderbordButtun;
+
+    private float lastToggleTime = -0.5f; // последнее время переключения
+    private float toggleCooldown = 0.5f;  // задержка в секундах
+
+    private List<KeyCode> resetSequence = new List<KeyCode> { KeyCode.Alpha2, KeyCode.Alpha4, KeyCode.Alpha8, KeyCode.Alpha8 };
+    private int currentResetStep = 0;
 
     private void Start()
     {
@@ -41,12 +48,27 @@ public class GameManager : MonoBehaviour
         {
             YG2.saves.maxScore = score;
             maxScoreText.text = score.ToString();
-
-            // Сохраняем обновлённый рекорд
             YG2.SaveProgress();
-
-            // Записываем рекорд в лидерборд (укажи своё техническое название)
             YG2.SetLeaderboard(leaderboardYG.nameLB, score);
+        }
+
+        // Проверка ввода последовательности клавиш
+        if (Input.anyKeyDown)
+        {
+            if (Input.GetKeyDown(resetSequence[currentResetStep]))
+            {
+                currentResetStep++;
+
+                if (currentResetStep >= resetSequence.Count)
+                {
+                    ResetSaves();
+                    currentResetStep = 0;
+                }
+            }
+            else
+            {
+                currentResetStep = 0;
+            }
         }
     }
 
@@ -66,8 +88,33 @@ public class GameManager : MonoBehaviour
 
     public void OnLBExample()
     {
-        LBExample.SetActive(!LBExample.activeSelf);
+        if (!LBExample.activeSelf)
+        {
+            // Включаем, но только если прошло 1 секунда
+            if (Time.time - lastToggleTime >= toggleCooldown)
+            {
+                LBExample.SetActive(true);
+                lastToggleTime = Time.time;
+            }
+        }
+        else
+        {
+            // Выключаем всегда
+            LBExample.SetActive(false);
+        }
 
         FindAnyObjectByType<AudioManager>().Play("Button");
+    }
+
+    public void UpdateLeaderBoard()
+    {
+        leaderboardYG.UpdateLB();
+    }
+
+    public void ResetSaves()
+    {
+        YG2.SetDefaultSaves();
+        YG2.SaveProgress();
+        print("----------------");
     }
 }
